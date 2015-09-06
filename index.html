@@ -184,10 +184,7 @@
 
 
  </head>
-
-<<<<<<< HEAD
   <body>
-    	<script src="temboo.js"></script>
 
 <embed name="GoodEnough" src="Ghost_Processional_Alternate.mp3" loop="true" hidden="true" autostart="true">
 
@@ -216,8 +213,6 @@
     </div>
 
 
-
-     <!-- Page items -->
     <div class="container">
        <!-- About items -->
       <div id="about">
@@ -244,7 +239,7 @@
         </p>
 
     </div>
-        <center><button id="erase" onclick="erase();">Erase</button><br><br><br></center><br>
+        <center><button id="erase" onclick="erase();">Erase</button><br></center><br>
         <center><button id="Send" onclick="gogoogle();">Send</button><br><br><br></center>
          <!-- BEGIN: Alphabet. -->
     <div class="alphabet" style="display:hidden">
@@ -446,74 +441,21 @@
                 new_list += res[i] + "+";
             };
             if (new_list.search("GOOGLE") !== -1) {
-                iframe = document.createElement("IFRAME");
-                iframe.setAttribute("src", "http://google.com/?gws_rd=ssl#q="+new_list);
-                iframe.style.width = "640px";
-                iframe.style.height = "480px";
-                document.body.appendChild(iframe);
+                var win = window.open("http://google.com/?gws_rd=ssl#q="+new_list, '_blank');
+                win.focus();
             }
             else if (new_list.search("TWEET") !== -1) {
-                $(document).ready(function () {
-                 $('#btnTweet').click(function (e) {
-                 var textToTweet = Search;
-                 if (textToTweet.length > 140) {
-                 alert('Tweet should be less than 140 Chars');
-                 }
-                 else {
-                 var twtLink = 'http://twitter.com/home?status=' +encodeURIComponent(textToTweet);
-                iframe = document.createElement("IFRAME");
-                iframe.setAttribute("src", twtLink);
-                iframe.style.width = "640px";
-                iframe.style.height = "480px";
-                document.body.appendChild(iframe);
-                 }
-                 });
-                 });
+                new_list.replace("+", "%20");
+                var win = window.open("http://twitter.com/home?status="+new_list, '_blank');
+                win.focus();
             }
             else if (new_list.search("POST") !== -1) {
-
-// Instantiate the client proxy
-// You may need to adjust the path to reflect the URI of your server proxy
-var temboo = new TembooProxy('/proxy-server');
-
-// Add the setStatus Choreo
-var setStatusChoreo = temboo.addChoreo('jsSetStatus');
-
-// Add inputs
-
-// Success callback
-var showResult = function(outputs, outputFilters) {
-    // Display outputs
-    if(outputFilters) {
-    	// Display named output filters
-        for(var name in outputFilters) {
-            console.log(name + ':');
-            for(var item in outputs[name]) {
-                console.log('    ' + outputs[name][item]);
-            }
-        }
-    } else {
-    	// Display raw outputs
-        for(var name in outputs) {
-            console.log(name + ': ' + outputs[name]);
-        }
-    }
-};
-
-// Error callback
-var showError = function(error) {
-    if(error.type === 'DisallowedInput') {
-        console.log(error.type + ' error: ' + error.inputName);
-    } else {
-        console.log(error.type + ' error: ' + error.message);
-    }
-};
-
-// Run the Choreo, specifying success and error callback handlers
-setStatusChoreo.execute(showResult, showError);
-
+                var win = window.open("https://www.facebook.com/sharer/sharer.php?s=100&p[url]=https://pizotal.azurewebsites.net&p[images][0]=&p[title]=Pizotal&p[summary]=Pizotal%20App", '_blank');
+                win.focus();
             }
             else if (new_list.search("UBER") !== -1) {
+                var win = window.open("https://www.facebook.com/sharer/sharer.php?s=100&p[url]=https://pizotal.azurewebsites.net&p[images][0]=&p[title]=Pizotal&p[summary]=Pizotal%20App", '_blank');
+                win.focus();
             }
             else {
                 alert("Please retry with a command.");
