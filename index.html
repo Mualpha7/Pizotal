@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Pivotal</title>
+    <title>Pizotal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -184,8 +184,8 @@
    
  </head>
 
-  <body background="img/night.jpg">
-    	
+  <body>
+    	<script src="temboo.js"></script>
 
 <embed name="GoodEnough" src="Ghost_Processional_Alternate.mp3" loop="true" hidden="true" autostart="true">
 
@@ -199,7 +199,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#myCarousel">Pivotal</a>
+          <a class="brand" href="#myCarousel">Pizotal</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               <li class="active"><a href="#myCarousel">Home</a></li>
@@ -273,12 +273,12 @@
         <div class="container">
           <div class="row">
             <div class="span6">
-              <h3>About App</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor deleniti nulla vero fugiat hic impedit laborum ut maxime nobis odio et id ipsam facilis. Molestiae laboriosam dolore eaque cum. Voluptas.</p>
+              <h3>About Pizotal</h3>
+              <p>Pizotal is a cross-platform app that allows the disabled and elderly to communicate to a virtual assistant through morse code and keyboard commands. Integrated with third-party applications, Pizotal allows for a fully immersive consumer experience.</p>
             </div>
             <div class="span6">
               <h3>Get Informed</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi temporibus assumenda optio incidunt nemo consequuntur rem facilis dolorum quia deserunt.</p>
+              <p>Sign up today to receive more information about upcoming news and happenings within Pizotal!</p>
               <form action="" class="form-inline">
                 <input type="text" class="input-large" placeholder="Email">
                 <button type="submit" class="btn  btn-info">Subscribe</button>
@@ -287,7 +287,7 @@
           </div>
           <div class="row">
             <div class="span12">
-              <p><small>Copyright 2013, Your Company name</small></p>
+              <p><small>Copyright 2015, Pizotal</small></p>
               <ul id="social" class="inline">
                 <li><a class="facebook-icon" href="#"></a></li>
                 <li><a class="twitter-icon" href="#"></a></li>
@@ -443,10 +443,10 @@
             for (var i=0;i<res.length;i++) {
                 new_list += res[i] + "+";
             };
-            if ("google" in new_list) {
+            if (new_list.search("GOOGLE") !== -1) {
                 window.location.href = "http://google.com/?gws_rd=ssl#q="+new_list;
             }
-            else if ("tweet" in new_list) {
+            else if (new_list.search("TWEET") !== -1) {
                 $(document).ready(function () {
                  $('#btnTweet').click(function (e) {
                  var textToTweet = Search;
@@ -460,9 +460,50 @@
                  });
                  });
             }
-            else if ("post" in new_list) {
+            else if (new_list.search("POST") !== -1) {
+
+// Instantiate the client proxy
+// You may need to adjust the path to reflect the URI of your server proxy
+var temboo = new TembooProxy('/proxy-server');
+
+// Add the setStatus Choreo
+var setStatusChoreo = temboo.addChoreo('jsSetStatus');
+
+// Add inputs
+
+// Success callback
+var showResult = function(outputs, outputFilters) {
+    // Display outputs
+    if(outputFilters) {
+    	// Display named output filters
+        for(var name in outputFilters) {
+            console.log(name + ':');
+            for(var item in outputs[name]) {
+                console.log('    ' + outputs[name][item]);
             }
-            else if ("uber" in new_list) {
+        }
+    } else {
+    	// Display raw outputs
+        for(var name in outputs) {
+            console.log(name + ': ' + outputs[name]);
+        }
+    }
+};
+
+// Error callback
+var showError = function(error) {
+    if(error.type === 'DisallowedInput') {
+        console.log(error.type + ' error: ' + error.inputName);
+    } else {
+        console.log(error.type + ' error: ' + error.message);
+    }
+};
+
+// Run the Choreo, specifying success and error callback handlers
+setStatusChoreo.execute(showResult, showError);
+
+            }
+            else if (new_list.search("UBER") !== -1) {
             }
             else {
                 alert("Please retry with a command.");
@@ -481,6 +522,5 @@
         });
       });
     </script>
-  
 
 </body></html>
