@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <!-- saved from url=(0066)http://twitter.github.com/bootstrap/examples/starter-template.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>Pivotal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -120,10 +122,52 @@
     </script>
     <!-- Le styles -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <style>
+    <style type="text/css">
+        div.output {}
+        div.output p.message {
+            font-size: 20px ;
+            line-height: 30px ;
+            }
+        div.output span.possibleCharacters {
+            background-color: gold ;
+            display: inline-block ;
+            padding: 0px 7px 0px 7px ;
+            }
+        div.alphabet {
+            bottom: 0px ;
+            }
+        div.alphabet h3 {
+            margin: 0px 0px 20px 0px ;
+            }
+        div.alphabet ul.characters {
+            margin: 0px 0px 0px 0px ;
+            padding: 0px 0px 0px 0px ;
+            }
+        div.alphabet ul.characters li {
+            border: 1px solid #CCCCCC ;
+            display: inline-block ;
+            padding: 10px 0px 10px 0px ;
+            text-align: center ;
+            width: 75px ;
+            }
+        div.alphabet ul.characters li span.character {
+            display: block ;
+            font-size: 14px ;
+            line-height: 18px ;
+            margin: 0px 0px 7px 0px ;
+            }
+        div.alphabet ul.characters li span.sequence {
+            display: block ;
+            font-size: 18px ;
+            line-height: 18px ;
+            }
       body {
         padding-top: 40px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
+        footer {
+            margin-top: 40px;
+        }
+        
     </style>
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
@@ -175,14 +219,31 @@
       <div id="about">
         <div id="heading">
           <h1>Morse Code Siri</h1>
-          <p class="lead">Siri is available for all people except those who cannot speak. Press the button below to lend Siri your voice. </p>  
-            <button id="button"></button>
+          <p class="lead">Siri is available for all people except those who cannot speak. Press any key below to lend Siri your voice. </p>  
         </div>
         
       
       </div>
      
-       <center class="output"> <textarea rows=20 width="200px" class="message"></textarea></center>
+       <div class="output">
+
+        <h3>
+            Your Message (Press any key to interact):
+        </h3>
+
+        <p class="message">
+
+            <span class="characters">
+                <!-- This will be populated by the user. -->
+            </span>
+
+            <span class="possibleCharacters">
+                <!-- This will be populated dynamically. -->
+            </span>
+
+        </p>
+
+    </div>
         <center><button id="Send">Send</button><br><br><br></center>
          <!-- BEGIN: Alphabet. -->
     <div class="alphabet" style="display:hidden">
@@ -206,7 +267,8 @@
     <!-- END: Alphabet. -->
      
  
-    </div> <!-- /container -->
+    </div> 
+      <!-- /container -->
     <!-- Footer items -->
     <footer>
         <div class="container">
@@ -245,7 +307,40 @@
     <script src="js/bootstrap.min.js"></script>
     
       <script type="text/javascript">
+          (function( $, container, morseCode ){
+            // Get the dom elements in this module.
+            var dom = {
+                characters: container.find( "ul.characters" ),
+                template: container.find( "script.template" )
+            };
+            // Get the the alphabet from the morse code model.
+            var alphabet = morseCode.getAlphabet();
+            // Loop over the alphabet to build the output.
+            for (var i = 0 ; i < alphabet.length ; i++){
+                // Get the current letter short-hand.
+                var letter = alphabet[ i ];
+                // Create a new instance of the template.
+                var template = $( dom.template.html() );
+                // Set the character.
+                template.find( "span.character" ).text(
+                    letter.character
+                );
+                // Set the sequence.
+                template.find( "span.sequence" ).text(
+                    letter.sequence
+                );
+                // Add the template to the output.
+                dom.characters.append( template );
+            }
+        })( jQuery, $( "div.alphabet" ), morseCode );
+
+          
         (function( $, container, morseCode ){
+             var dom = {
+                characters: container.find( "span.characters" ),
+                possibleCharacters: container.find( "span.possibleCharacters" )
+            };
+
             // Get the dom elements in this module.
             // Get the dot and dash durations (in milliseconds).
             var dotDuration = morseCode.getDotDuration();
