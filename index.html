@@ -6,7 +6,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <script type="text/javascript">
+        var morseCode = (function(){
+        this._dotDuration = 250;
+        this._dashDuration = (this._dotDuration * 3);
+        this._pauseDuration = (this._dotDuration * 1);
+        this._patternMap = {
+            ".-": "A",
+            "-...": "B",
+            "-.-.": "C",
+            "-..": "D",
+            ".": "E",
+            "..-.": "F",
+            "--.": "G",
+            "....": "H",
+            "..": "I",
+            ".---": "J",
+            "-.-": "K",
+            ".-..": "L",
+            "--": "M",
+            "-.": "N",
+            "---": "O",
+            ".--.": "P",
+            "--.-": "Q",
+            ".-.": "R",
+            "...": "S",
+            "-": "T",
+            "..-": "U",
+            "...-": "V",
+            ".--": "W",
+            "-..-": "X",
+            "-.--": "Y",
+            "--..": "Z",
+            "-----": "0",
+            ".----": "1",
+            "..---": "2",
+            "...--": "3",
+            "....-": "4",
+            ".....": "5",
+            "-....": "6",
+            "--...": "7",
+            "---..": "8",
+            "----.": "9"
+        };
+        this._sequence = "";
+        this.addSequence = function( value ){
+             if (
+                (value !== ".") &&
+                (value !== "-")
+                ){
+                    throw( new Error( "InvalidTone" ) );
+                }
+                this._sequence += value;
+                return( this );
+        };
+        this.dash = function(){
+            //Adds dash to the sequence
+            return( this.addSequence( "-" ) );
+        };
+        this.dot = function(){
+            //Adds dot to the sequence
+            return( this.addSequence( "." ) );
+        };
+        //Returns the alphanumeric character
+        this.getAlphabet = function(){
+            var characterSet = [];
+            for (var pattern in this._patternMap){
+                characterSet.push({
+                    sequence: pattern,
+                    character: this._patternMap[ pattern ]
+            });
+        }
+        characterSet.sort(
+            function( a, b ){
+                return( a.character <= b.character ? -1 : 1 );
+            }
+        );
+        return( characterSet );
+        };
+        this.getDashDuration = function(){
+            return( this._dashDuration );
+        };
+        this.getDotDuration = function(){
+            return( this._dotDuration );
+        };
+        this.getPauseDuration = function(){
+            return( this._pauseDuration );
+        };
+        this.resetSequence = function(){
+            this._sequence = "";
+        };
+        this.resolvePartial = function(){
+            var potentialCharacters = [];
+            for (var pattern in this._patternMap){
+            if (pattern.indexOf( this._sequence ) === 0){
+                potentialCharacters.push(
+                    this._patternMap[ pattern ]
+                );
+                }
+            }
+            return( potentialCharacters.sort() );
+        };
+        this.resolveSequence = function(){
+            if (!this._patternMap.hasOwnProperty( this._sequence )){
+                throw( new Error( "InvalidSequence" ) );
+            }
+            var character = this._patternMap[ this._sequence ];
+            this._sequence = "";
+            return( character );
+        };
+        return( this );
+    }).call( {} );
+    </script>
     <!-- Le styles -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -24,12 +135,7 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <!-- Fav and touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-114-precomposed.png">
-      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-72-precomposed.png">
-                    <link rel="apple-touch-icon-precomposed" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-57-precomposed.png">
-                                   <link rel="shortcut icon" href="http://twitter.github.com/bootstrap/assets/ico/favicon.png">
+   
  </head>
 
   <body background="img/night.jpg">
@@ -76,8 +182,28 @@
       
       </div>
      
-       <center> <textarea rows=20 width="200px" id="text"></textarea></center>
+       <center class="output"> <textarea rows=20 width="200px" class="message"></textarea></center>
         <center><button id="Send">Send</button><br><br><br></center>
+         <!-- BEGIN: Alphabet. -->
+    <div class="alphabet" style="display:hidden">
+
+        <h3>
+            Morse Code Alphabet
+        </h3>
+
+        <ul class="characters">
+            <!-- This will be populated dynamically. -->
+        </ul>
+
+        <!-- Define the template. --->
+        <script type="application/x-template" class="template">
+            <li>
+                <span class="character"></span>
+                <span class="sequence"></span>
+            </li>
+        </script>
+    </div>
+    <!-- END: Alphabet. -->
      
  
     </div> <!-- /container -->
@@ -117,7 +243,103 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script>window.jQuery || document.write("<script src='js/jquery-1.8.3.min.js'>\x3C/script>")</script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/morsecode.js"></script>
+    
+      <script type="text/javascript">
+        (function( $, container, morseCode ){
+            // Get the dom elements in this module.
+            // Get the dot and dash durations (in milliseconds).
+            var dotDuration = morseCode.getDotDuration();
+            var dashDuration = morseCode.getDashDuration();
+            var pauseDuration = morseCode.getPauseDuration();
+            // Store the date/time for the keydown.
+            var keyDownDate = null;
+            // Keep a timer for post-key resolution for characters.
+            var resolveTimer = null;
+            // Keep a timer for adding a new space to the message.
+            var spaceTimer = null;
+            // For this module, we are going to bind to any key click
+            // to indicate an interaction with the interpreter. There
+            // will be no other key interaction.
+            $( document ).keydown(
+                function( event ){
+                    // Prevent any default action.
+                    event.preventDefault();
+                    // Check to see if there is a key-down date. If
+                    // so, then exit - we only want the first press
+                    // event to be registered.
+                    if (keyDownDate){
+                        // Don't process this event.
+                        return;
+                    }
+                    // Clear the resolution timer.
+                    clearTimeout( resolveTimer );
+                    // Clear the space timer.
+                    clearTimeout( spaceTimer );
+                    // Store the date for this key-down.
+                    keyDownDate = new Date();
+                }
+            );
+            $( document ).keyup(
+                function( event ){
+                    // Prevent any default action.
+                    event.preventDefault();
+                    // Determine the keypress duration.
+                    var keyPressDuration = ((new Date())- keyDownDate);
+                    // Clear the key down date so subsequent key
+                    // press events can be processed.
+                    keyDownDate = null;
+                    // Check to see if the duration indicates a dot
+                    // or a dash.
+                    if (keyPressDuration <= dotDuration){
+                        // Push a dot.
+                        morseCode.dot();
+                    } else {
+                        // Push a dash.
+                        morseCode.dash();
+                    }
+                    // Display the possible characters for the current
+                    // sequence.
+                    
+                    // Now that the key has been pressed, we need to
+                    // wait a bit to see if we need to resolve the
+                    // current sequence (if the user doesn't interact
+                    // with the interpreter, we'll resolve).
+                    resolveTimer = setTimeout(
+                        function(){
+                            // Try to resolve the sequence.
+                            try {
+                                // Get the character respresented by
+                                // the current sequence.
+                                var character = morseCode.resolveSequence();
+                                // Add it to the output.
+                                dom.characters.text(
+                                    dom.characters.text() + character
+                                );
+                            } catch (e) {
+                                // Reset the sequence - something
+                                // went wrong with the user's input.
+                                morseCode.resetSequence();
+                            }
+                            // Clear the possible matches.
+                            dom.possibleCharacters.empty();
+                            // Set a timer to add a new space to the
+                            // message.
+                            spaceTimer = setTimeout(
+                                function(){
+                                    // Add a "space".
+                                    dom.characters.text(
+                                        dom.characters.text() + "__"
+                                    );
+                                },
+                                3500
+                            );
+                        },
+                        (pauseDuration * 3)
+                    );
+                }
+            );
+        })( jQuery, $( "div.output" ), morseCode );
+      </script>
     <script src="js/jquery.easing.1.3.js"></script>
     <script type="text/javascript">
       $(document).ready(function() {
