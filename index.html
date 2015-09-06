@@ -49,7 +49,8 @@
             "-....": "6",
             "--...": "7",
             "---..": "8",
-            "----.": "9"
+            "----.": "9",
+            ".--.-.": "@"
         };
         this._sequence = "";
         this.addSequence = function( value ){
@@ -169,7 +170,7 @@
         footer {
             margin-top: 40px;
         }
-        
+
     </style>
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
@@ -181,11 +182,16 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-   
+
  </head>
 
+<<<<<<< HEAD
   <body>
     	<script src="temboo.js"></script>
+=======
+  <body background="img/night.jpg">
+
+>>>>>>> origin/master
 
 <embed name="GoodEnough" src="Ghost_Processional_Alternate.mp3" loop="true" hidden="true" autostart="true">
 
@@ -212,21 +218,21 @@
         </div>
       </div>
     </div>
-    
-   
-    
+
+
+
      <!-- Page items -->
     <div class="container">
        <!-- About items -->
       <div id="about">
         <div id="heading">
           <h1>Morse Code Siri</h1>
-          <p class="lead">Siri is available for all people except those who cannot speak. Press any key below to lend Siri your voice. </p>  
+          <p class="lead">Siri is available for all people except those who cannot speak. Press any key below to lend Siri your voice. </p>
         </div>
-        
-      
+
+
       </div>
-     
+
        <div class="output">
 
         <h3>
@@ -264,9 +270,9 @@
         </script>
     </div>
     <!-- END: Alphabet. -->
-     
- 
-    </div> 
+
+
+    </div>
       <!-- /container -->
     <!-- Footer items -->
     <footer>
@@ -304,7 +310,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script>window.jQuery || document.write("<script src='js/jquery-1.8.3.min.js'>\x3C/script>")</script>
     <script src="js/bootstrap.min.js"></script>
-    
+
       <script type="text/javascript">
           (function( $, container, morseCode ){
             // Get the dom elements in this module.
@@ -333,7 +339,7 @@
             }
         })( jQuery, $( "div.alphabet" ), morseCode );
 
-          
+
         (function( $, container, morseCode ){
              var dom = {
                 characters: container.find( "span.characters" ),
@@ -393,7 +399,7 @@
                     }
                     // Display the possible characters for the current
                     // sequence.
-                    
+
                     // Now that the key has been pressed, we need to
                     // wait a bit to see if we need to resolve the
                     // current sequence (if the user doesn't interact
@@ -444,7 +450,11 @@
                 new_list += res[i] + "+";
             };
             if (new_list.search("GOOGLE") !== -1) {
-                window.location.href = "http://google.com/?gws_rd=ssl#q="+new_list;
+                iframe = document.createElement("IFRAME");
+                iframe.setAttribute("src", "http://google.com/?gws_rd=ssl#q="+new_list);
+                iframe.style.width = "640px";
+                iframe.style.height = "480px";
+                document.body.appendChild(iframe);
             }
             else if (new_list.search("TWEET") !== -1) {
                 $(document).ready(function () {
@@ -455,7 +465,11 @@
                  }
                  else {
                  var twtLink = 'http://twitter.com/home?status=' +encodeURIComponent(textToTweet);
-                 window.open(twtLink,'_blank');
+                iframe = document.createElement("IFRAME");
+                iframe.setAttribute("src", twtLink);
+                iframe.style.width = "640px";
+                iframe.style.height = "480px";
+                document.body.appendChild(iframe);
                  }
                  });
                  });
@@ -522,5 +536,6 @@ setStatusChoreo.execute(showResult, showError);
         });
       });
     </script>
+
 
 </body></html>
