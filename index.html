@@ -242,7 +242,7 @@
         </p>
 
     </div>
-        <center><button id="erase">Erase</button><br><br><br></center><br>
+        <center><button id="erase" onclick="erase();">Erase</button><br><br><br></center><br>
         <center><button id="Send" onclick="gogoogle();">Send</button><br><br><br></center>
          <!-- BEGIN: Alphabet. -->
     <div class="alphabet" style="display:hidden">
@@ -433,6 +433,9 @@
                 }
             );
         })( jQuery, $( "div.output" ), morseCode );
+        function erase() {
+            document.getElementById("characters").innerHTML = "";
+        };
         function gogoogle() {
             var Search = document.getElementById('characters').innerHTML;
             var res = Search.split(" ");
