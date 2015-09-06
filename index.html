@@ -239,7 +239,7 @@
         </p>
 
     </div>
-        <center><button id="erase" onclick="erase();">Erase</button><br></center><br>
+        <center><button id="erase" onclick="erase();">Erase</button></center><br>
         <center><button id="Send" onclick="gogoogle();">Send</button><br><br><br></center>
          <!-- BEGIN: Alphabet. -->
     <div class="alphabet" style="display:hidden">
@@ -455,6 +455,18 @@
             }
             else if (new_list.search("UBER") !== -1) {
                 var win = window.open("https://www.facebook.com/sharer/sharer.php?s=100&p[url]=https://pizotal.azurewebsites.net&p[images][0]=&p[title]=Pizotal&p[summary]=Pizotal%20App", '_blank');
+                win.focus();
+            }
+            else if (new_list.search("AMAZON") !== -1) {
+                var win = window.open("https://www.amazon.com/ap/signin?_encoding=UTF8&accountStatusPolicy=P1&openid.assoc_handle=usflex&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&openid.pape.max_auth_age=900&openid.return_to=https%3A%2F%2Fwww.amazon.com%2Fgp%2Fdigital%2Ffiona%2Fbuy.html%3Fie%3DUTF8%26ASIN.0%3DB014TE1FLU%26addNarration%3D0%26audibleAsin%3D%26audibleOurPrice%3D%26cor.0%3DUS%26displayedGiftPrice%3D9.99%26displayedGiftPriceCurrencyCode%3DUSD%26displayedPrice%3D9.99%26displayedPriceCurrencyCode%3DUSD%26isPreorder%3D0%26itemCount%3D1%26offerListingID.0%3DtWuFOHWlqjvAIoRLaYQSJkXclSrOkgrGMVucotBuRxFa0AsBRPLS9Enyw4v0unmH85NmiHCJtAh2pMlA%252FWIMNoQ1LbpBMdZHYC9zd9bFPCh94wr7%252FdF%252FzAikgeEwxC68%252BJXJenTM5GZXZdE0C9tZvQ%253D%253D%26ref_%3Dkics_dp_buybox_oneclick_buy%26signInRedirect%3D1%26submit.one-click-order.x%3DSubmit%26subtype.0%3DSTANDARD%26t%3Dfiona%26transactionMode%3Done-click", '_blank');
+                win.focus();
+            }
+            else if (new_list.search("VENMO") !== -1) {
+                var win = window.open("https://venmo.com/?txn=pay&note=Enter%20your%20note%20here", '_blank');
+                win.focus();
+            }
+            else if (new_list.search("WATCH") !== -1) {
+                var win = window.open("https://www.youtube.com/results?search_query="+new_list, '_blank');
                 win.focus();
             }
             else {
